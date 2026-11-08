@@ -1,0 +1,8 @@
+.mini-harness/
+__pycache__/
+*.pyc
+.DS_Store
+demo_chat/
+demo_agent/
+.env
+*.env
