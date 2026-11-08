@@ -15,7 +15,7 @@ Usage:
   python mini_harness.py "fix the tests"    # one task, then exit
   python mini_harness.py --yes "..."        # auto-approve risky tools (careful!)
 
-Config (environment variables):
+Config (environment variables, or KEY=value lines in a .env file next to this file):
   DEEPSEEK_API_KEY   your API key (or MINI_API_KEY for any other provider)
   MINI_BASE_URL      any OpenAI-compatible server   (default https://api.deepseek.com)
   MINI_MODEL         model name                     (default deepseek-v4-flash)
@@ -34,6 +34,11 @@ import urllib.error
 import urllib.request
 
 # ── 0. Config ─────────────────────────────────────────────────────────────────
+ENV_FILE = pathlib.Path(__file__).resolve().parent / ".env"   # your key and model; git-ignored
+for line in ENV_FILE.read_text().splitlines() if ENV_FILE.exists() else []:
+    key, sep, value = line.strip().removeprefix("export ").partition("=")
+    if sep and not key.startswith("#"):
+        os.environ.setdefault(key.strip(), value.strip().strip("\"'"))   # real env vars win
 BASE_URL = os.environ.get("MINI_BASE_URL", "https://api.deepseek.com").rstrip("/")
 API_KEY = os.environ.get("MINI_API_KEY") or os.environ.get("DEEPSEEK_API_KEY", "")
 MODEL = os.environ.get("MINI_MODEL", "deepseek-v4-flash")
@@ -331,7 +336,7 @@ def main():
         AUTO_APPROVE = True
         args.remove("--yes")
     if not API_KEY and "localhost" not in BASE_URL and "127.0.0.1" not in BASE_URL:
-        sys.exit("Set DEEPSEEK_API_KEY (or MINI_API_KEY + MINI_BASE_URL for another provider).")
+        sys.exit(f"No API key. Copy .env.example to {ENV_FILE} and put your own key in it.")
     log_dir = WORKSPACE / ".mini-harness"
     log_dir.mkdir(exist_ok=True)
     LOG = log_dir / f"session-{datetime.datetime.now():%Y%m%d-%H%M%S}.jsonl"

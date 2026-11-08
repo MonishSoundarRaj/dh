@@ -12,10 +12,16 @@ WARNING: no permission checks yet, so the model can run any command. Step 4
 """
 import json
 import os
+import pathlib
 import subprocess
 import sys
 import urllib.request
 
+ENV_FILE = pathlib.Path(__file__).resolve().parent.parent / ".env"   # your key and model; git-ignored
+for line in ENV_FILE.read_text().splitlines() if ENV_FILE.exists() else []:
+    key, sep, value = line.strip().removeprefix("export ").partition("=")
+    if sep and not key.startswith("#"):
+        os.environ.setdefault(key.strip(), value.strip().strip("\"'"))   # real env vars win
 BASE_URL = os.environ.get("MINI_BASE_URL", "https://api.deepseek.com").rstrip("/")
 API_KEY = os.environ.get("MINI_API_KEY") or os.environ.get("DEEPSEEK_API_KEY", "")
 MODEL = os.environ.get("MINI_MODEL", "deepseek-v4-flash")

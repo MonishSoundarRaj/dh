@@ -1,6 +1,6 @@
 # mini-harness
 
-A coding-agent harness in one Python file (358 lines, standard library only), built for our COMP 523 (UNC) tech talk on agent harnesses.
+A coding-agent harness in one Python file (363 lines, standard library only), built for our COMP 523 (UNC) tech talk on agent harnesses.
 
 **The model is the brain. The harness is the body.** A model on its own can only write text. A harness gives it tools (hands), feeds back what the tools return (eyes), keeps a log (memory), and asks you before anything risky (reflexes). Claude Code, Codex CLI, and [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) are all harnesses. This is the smallest one we could write that still fixes real bugs.
 
@@ -16,18 +16,15 @@ cd dh/demo_project
 python3 -m unittest -v               # 3 errors: the bugs
 ```
 
-Set up the model. In class we used Claude Opus 5.5 with medium thinking. Get a key at console.anthropic.com (a Claude.ai subscription doesn't include API access):
+Set up the model. In class we used Claude Opus 5.5 with medium thinking. Get a key at console.anthropic.com (a Claude.ai subscription doesn't include API access), then, from the `dh` folder:
 
 ```sh
-export MINI_BASE_URL=https://api.anthropic.com/v1
-export MINI_MODEL=claude-opus-5-5    # cheaper: claude-sonnet-5-5 or claude-haiku-4-5-20251001
-export MINI_EFFORT=medium            # optional: how hard it thinks (low, medium, high)
-export MINI_API_KEY=sk-ant-...       # your own key
+cp .env.example .env                 # Windows: copy .env.example .env
 ```
 
-Or use DeepSeek, the default and the cheapest: just `export DEEPSEEK_API_KEY=sk-...` (key from platform.deepseek.com).
+Open `.env` and replace `sk-ant-...` with your own key. The harness and the step files read `.env` by themselves, and `.gitignore` keeps it out of git. For a cheaper model, set `MINI_MODEL=claude-sonnet-5-5` there. For DeepSeek, the default and cheapest, delete the Claude lines and put `DEEPSEEK_API_KEY=sk-...` (key from platform.deepseek.com).
 
-On Windows PowerShell, set each one like `$env:MINI_API_KEY="sk-ant-..."`, and use `python` instead of `python3`.
+On Windows, use `python` instead of `python3`.
 
 Now try the same bugs two ways:
 
@@ -51,6 +48,8 @@ MINI_BASE_URL=http://127.0.0.1:8765 python3 ../mini_harness.py "Fix the failing 
 ```
 
 ## Configuration
+
+Set these in `.env` (see `.env.example`) or export them in your terminal. Anything exported wins over `.env`.
 
 | Variable | Default | Meaning |
 |---|---|---|

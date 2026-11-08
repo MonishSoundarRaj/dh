@@ -4,10 +4,10 @@ This is the written version of the demo from our tech talk. Go at your own pace.
 
 | Step | File | Idea | Lines |
 |---|---|---|---|
-| 1 | `steps/01_chat.py` | A chat window: the model is smart, but you do the work | 55 |
-| 2 | `steps/02_one_tool_call.py` | The model *asks* for a tool; your code *runs* it | 64 |
-| 3 | `steps/03_agent_loop.py` | Put that in a loop and you have an agent | 78 |
-| 4 | `mini_harness.py` | Make the loop safe, informed, and durable | 358 |
+| 1 | `steps/01_chat.py` | A chat window: the model is smart, but you do the work | 61 |
+| 2 | `steps/02_one_tool_call.py` | The model *asks* for a tool; your code *runs* it | 70 |
+| 3 | `steps/03_agent_loop.py` | Put that in a loop and you have an agent | 84 |
+| 4 | `mini_harness.py` | Make the loop safe, informed, and durable | 363 |
 
 ## Step 0: Set up
 
@@ -19,21 +19,13 @@ cd dh
 python3 -m unittest discover tests      # 16 tests pass, no key needed
 ```
 
-Get **your own** API key and export it. Never commit it or share it. We used Claude Opus 5.5 with medium thinking in class (key from console.anthropic.com; a Claude.ai subscription doesn't include API access):
+Get **your own** API key and put it in a `.env` file. Never commit it or share it. We used Claude Opus 5.5 with medium thinking in class (key from console.anthropic.com; a Claude.ai subscription doesn't include API access):
 
 ```sh
-export MINI_BASE_URL=https://api.anthropic.com/v1
-export MINI_MODEL=claude-opus-5-5     # cheaper: claude-sonnet-5-5
-export MINI_EFFORT=medium             # optional: low, medium, or high
-export MINI_API_KEY=sk-ant-...        # your own key
+cp .env.example .env          # Windows: copy .env.example .env
 ```
 
-DeepSeek is the default and cheaper. With a key from platform.deepseek.com you only need one line:
-
-```sh
-export DEEPSEEK_API_KEY=sk-...          # macOS / Linux
-$env:DEEPSEEK_API_KEY="sk-..."          # Windows PowerShell
-```
+Open `.env` and replace `sk-ant-...` with your key. Every file in this repo reads `.env` by itself, and `.gitignore` keeps it out of git. Cheaper: `MINI_MODEL=claude-sonnet-5-5`. DeepSeek, the default and cheapest: delete the Claude lines and put `DEEPSEEK_API_KEY=sk-...` (key from platform.deepseek.com).
 
 Any OpenAI-compatible server also works: set `MINI_BASE_URL` and `MINI_MODEL` (and `MINI_API_KEY` if it needs one). For a free local model, install [Ollama](https://ollama.com), pull a model that supports tool calling, and use `MINI_BASE_URL=http://localhost:11434/v1`.
 
